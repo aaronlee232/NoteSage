@@ -1,5 +1,5 @@
 // Read in markdown file
-import { getEmbeddingFromText, getTokenCount } from '@/scripts/embeddings'
+import { generateEmbeddingFromText, getTokenCount } from '@/scripts/embeddings'
 import { getAllFileObjects } from '@/scripts/read-document'
 import { supabase } from '@/scripts/supabase'
 import { createClient } from '@supabase/supabase-js'
@@ -107,7 +107,7 @@ const generateEmbeddings = async (
           page_id: newPage?.id,
           content: section.content,
           token_count: await getTokenCount(section.content),
-          embedding: await getEmbeddingFromText(section.content),
+          embedding: await generateEmbeddingFromText(section.content),
         }
         pageSections.push(pageSection)
       }
@@ -150,7 +150,7 @@ const generateEmbeddings = async (
           page_id: existingPage?.id,
           content: section.content,
           token_count: await getTokenCount(section.content),
-          embedding: await getEmbeddingFromText(section.content),
+          embedding: await generateEmbeddingFromText(section.content),
         }
         pageSections.push(pageSection)
       }

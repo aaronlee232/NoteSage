@@ -2,11 +2,11 @@ import axios from 'axios'
 import React, { FormEvent, useState } from 'react'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 
-const Chat = () => {
-  const [conversationId, setConversationId] = useState(1)
+const DebugChat = () => {
+  const [chatId, setChatId] = useState(1)
   const [tag, setTag] = useState('all')
-  const [conversationHistory, setConversationHistory] = useState<Message[]>([])
-  const [usedConversations, setUsedConversations] = useState<Message[]>([])
+  const [chatHistory, setChatHistory] = useState<Message[]>([])
+  const [usedChatHistory, setUsedChatHistory] = useState<Message[]>([])
   const [context, setContext] = useState<string>('')
   const [query, setQuery] = useState<string>('')
 
@@ -15,11 +15,11 @@ const Chat = () => {
 
     const { data } = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/chat`,
-      { conversationId, query, tag }
+      { chatId, query, tag }
     )
 
-    setConversationHistory(data.conversationHistory)
-    setUsedConversations(data.usedConversations)
+    setChatHistory(data.chatHistory)
+    setUsedChatHistory(data.usedChatHistory)
     setContext(data.context)
   }
 
@@ -30,8 +30,8 @@ const Chat = () => {
       <div className='border p-4'>
         <div className='mb-10'>
           <h1 className='text-2xl text-center'>User-Facing Chat History</h1>
-          {conversationHistory &&
-            conversationHistory.map((message, index) => {
+          {chatHistory &&
+            chatHistory.map((message, index) => {
               return (
                 <>
                   {/* <pre> */}
@@ -64,13 +64,13 @@ const Chat = () => {
               className='text-black'
             />
             <br />
-            <label>Conversation id:</label>
+            <label>Chat id:</label>
             <input
               type='number'
               min='1'
               max='10'
               onChange={({ target }) => {
-                setConversationId(parseInt(target.value))
+                setChatId(parseInt(target.value))
               }}
               className='text-black mx-2'
             />
@@ -90,8 +90,8 @@ const Chat = () => {
 
         <div className='mb-10'>
           <h1 className='text-2xl text-center'>Actual History Used by AI</h1>
-          {usedConversations &&
-            usedConversations.map((message, index) => {
+          {usedChatHistory &&
+            usedChatHistory.map((message, index) => {
               return (
                 <>
                   {/* <pre> */}
@@ -107,4 +107,4 @@ const Chat = () => {
   )
 }
 
-export default Chat
+export default DebugChat

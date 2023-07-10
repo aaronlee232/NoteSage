@@ -9,40 +9,45 @@ modified: '2023-07-05T02:33:26.318Z'
 
 ## Planned Tables
 
-*fields are not part of MVP
+\*fields are not part of MVP
 
 user:
+
 - id
 - name
-- email*
-- password*
-- isVerified*
+- email\*
+- password\*
+- isVerified\*
 
 page_section:
+
 - id
 - page_id (foreign key)
 - content
 - embedding
 
 page
+
 - id
 - page_path - provide source of a page/page_section
 
 tag
+
 - id
 - name - project-documentation/resume/notes/etc...
 
 page_tag (Junction table of Page and Tag)
+
 - id
 - page_id
 - tag_id
 
-conversation
+chat
+
 - id
 - name
-- user_id*
+- user_id\*
 - messages[] - [role: message content, role: message content...]
-
 
 ## MVP Tables
 
@@ -50,5 +55,4 @@ conversation
 - tag
 - page_tag
 - page_section
-- conversation
-
+- chat

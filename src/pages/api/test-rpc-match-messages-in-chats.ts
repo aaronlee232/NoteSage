@@ -2,7 +2,7 @@
 import { supabase } from '@/scripts/supabase'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-const conversation_id = 1
+const chat_id = 1
 const embedding = [
   -0.07367987, 0.064100996, -0.042705823, 0.0007867117, 0.0065854657,
   -0.020209122, 0.016496543, 0.025237454, 0.003262748, 0.0038793066,
@@ -85,8 +85,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { error, data } = await supabase.rpc('match_messages_in_conversation', {
-    conversation_id,
+  const { error, data } = await supabase.rpc('match_messages_in_chat', {
+    chat_id,
     embedding,
     recent_cutoff,
     match_threshold,

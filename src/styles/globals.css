@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -14,14 +14,24 @@
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
 body {
-  color: rgb(var(--foreground-rgb));
+  /* color: rgb(var(--foreground-rgb)); */
   background: linear-gradient(
       to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
+      /* rgb(var(--background-end-rgb)) */ rgb(217, 217, 217)
     )
-    rgb(var(--background-start-rgb));
+    /* rgb(var(--background-start-rgb)); */ rgb(217, 217, 217);
+}
+
+@layer components {
+  .infoText {
+    @apply p-4 bg-gray-200/60 rounded-lg max-w-[300px];
+  }
+
+  .chatRow {
+    @apply rounded-lg px-5 py-3 text-sm flex items-center justify-center space-x-2 hover:bg-gray-400/30 cursor-pointer text-gray-100 transition-all duration-200 ease-out;
+  }
 }

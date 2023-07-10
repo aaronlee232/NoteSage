@@ -1,6 +1,10 @@
 type Message = {
+  id?: number
+  chat_id?: number
+  avatar?: string
+  role: string
   content: string
-  embedding: number[]
+  embedding?: number[]
   similarity?: number
 }
 

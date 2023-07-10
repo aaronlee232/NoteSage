@@ -65,9 +65,9 @@ Once the command finishes, you should be able to access NoteSage on http://local
 
 To interact with the chat directly, navigate to http://localhost:3000/debug-chat, and enter queries in the input field.
 
-After submitting the query, you should see your message appear above the input box. Additional information on what context and conversation messages the AI used to construct its response will be displayed below the input field.
+After submitting the query, you should see your message appear above the input box. Additional information on what context and chat messages the AI used to construct its response will be displayed below the input field.
 
-The conversation itself should appear as:
+The chat itself should appear as:
 
 ```
 user: Can you explain what the function101 does in feature202?
@@ -114,7 +114,7 @@ I usually perform calculation logic on the results of a basic SQL query, so load
 Being able to restrict the scope of what the LLM could use as a resource to respond to a query was a blessing and a curse.
 <br/>
 <br/>
-On one hand, it enabled me to restrict the LLM from straying from the contents of the documents and hallucinating answers, but on the other hand it was difficult to balance the restrictiveness of the prompt in a way that it could still reference conversation details without hallucinating.
+On one hand, it enabled me to restrict the LLM from straying from the contents of the documents and hallucinating answers, but on the other hand it was difficult to balance the restrictiveness of the prompt in a way that it could still reference chat details without hallucinating.
 
 </details>
 

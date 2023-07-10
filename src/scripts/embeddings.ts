@@ -1,7 +1,9 @@
 import { pipeline } from '@xenova/transformers'
 import GPT3Tokenizer from 'gpt3-tokenizer'
 
-export const getEmbeddingFromText = async (text: string): Promise<number[]> => {
+export const generateEmbeddingFromText = async (
+  text: string
+): Promise<number[]> => {
   const generateEmbeddings = await pipeline(
     'feature-extraction',
     'Xenova/all-MiniLM-L6-v2'
