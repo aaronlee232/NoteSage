@@ -14,7 +14,7 @@ const ChatPage = (props: Props) => {
   const [updateMessages, setUpdateMessages] = useState<boolean>(false)
 
   return (
-    <div className='flex flex-col h-screen overflow-hidden'>
+    <div className='px-5 flex flex-col h-screen overflow-hidden'>
       <Chat
         chatId={id}
         updateMessages={updateMessages}

@@ -4,6 +4,8 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/**/*.{js,jsx,ts,tsx}', // react-tailwindcss-select
+    './node_modules/react-tailwindcss-select/dist/index.esm.js', // react-tailwindcss-select
   ],
   theme: {
     extend: {
@@ -15,6 +17,7 @@ module.exports = {
       colors: {
         gray: {
           100: '#d7d7d7', // Platinum
+          150: '#cbcbcb',
           200: '#b0afae',
           300: '#888786',
           400: '#615f5d',
@@ -63,5 +66,8 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-dotted-background'),
+    require('@tailwindcss/typography'),
+  ],
 }

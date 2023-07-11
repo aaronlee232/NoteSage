@@ -3,6 +3,8 @@ import NewChat from './chat/NewChat'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import ChatRow from './chat/ChatRow'
+import ModelSelection from './chat/ModelSelection'
+import TagSelection from './chat/TagSelection'
 
 type Chat = {
   id: number
@@ -20,7 +22,7 @@ const SideBar = (props: Props) => {
   useEffect(() => {
     if (router.asPath.includes('/chat')) {
       const fetchChats = async () => {
-        const { data: chats } = await axios.get('/api/chat/get-all-chats')
+        const { data: chats } = await axios.get('/api/chat/get-chats')
         setChats(chats)
       }
 
@@ -39,20 +41,29 @@ const SideBar = (props: Props) => {
       <div className='flex-1 text-gray-100'>
         <div>
           <NewChat />
-          <div>{/* Model Select (might replace with tag select)*/}</div>
+
+          <div className='hidden md:inline'>
+            <ModelSelection />
+          </div>
+
+          <div>
+            <TagSelection />
+          </div>
         </div>
-        {/* Map through chat rows */}
-        {chats?.map(
-          (chat) => (
-            <ChatRow
-              key={chat.id}
-              id={chat.id}
-              name={chat.name}
-              setRefreshChat={setRefreshChat}
-            />
-          )
-          // return <p key={chat.id}>{chat.name}</p>
+        {chats.length === 0 && (
+          <div className='animate-pulse text-center text-gray-100'>
+            <p>Loading Chats...</p>
+          </div>
         )}
+
+        {chats?.map((chat) => (
+          <ChatRow
+            key={chat.id}
+            id={chat.id}
+            name={chat.name}
+            setRefreshChat={setRefreshChat}
+          />
+        ))}
       </div>
     </div>
   )

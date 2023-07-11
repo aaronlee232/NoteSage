@@ -17,7 +17,9 @@ export default function RootLayout({
 
           <Toaster position='top-right' reverseOrder={false} />
 
-          <div className='bg-gray-100 flex-1'>{children}</div>
+          <div className='flex-1 bg-gray-100 bg-dotted-spacing-12 bg-dotted-radius-[1.3px] bg-dotted-gray-500/30'>
+            {children}
+          </div>
         </div>
       </div>
     </React.Fragment>
