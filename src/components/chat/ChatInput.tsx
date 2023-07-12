@@ -1,10 +1,11 @@
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import ModelSelection from './ModelSelection'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { v4 as uuidv4 } from 'uuid'
+import { generateChatName } from '@/scripts/generate-chat-name'
 
 type Props = {
   chatId: number
@@ -27,6 +28,27 @@ const ChatInput = ({ chatId: id }: Props) => {
       fallbackData: [],
     }
   )
+
+  useEffect(() => {
+    const updateChatName = async () => {
+      const { data: chatName } = await axios.post(
+        '/api/chat/update-chat-name',
+        {
+          messages,
+          chatId: id,
+        }
+      )
+
+      return chatName
+      // useSWR mutate (add reciever on sidebar)
+    }
+
+    if (messages.length === 2) {
+      updateChatName().then(() => {
+        mutate('updateSidebarChatsKey')
+      })
+    }
+  }, [messages])
 
   const sendMesssage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

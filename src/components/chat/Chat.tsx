@@ -24,8 +24,6 @@ const Chat = ({ chatId: id }: Props) => {
     fallbackData: [],
   })
 
-  // console.log('messages:', messages)
-
   return (
     <div className='flex-1 overflow-y-auto overflow-x-hidden'>
       {messages.length === 0 && (
@@ -39,8 +37,6 @@ const Chat = ({ chatId: id }: Props) => {
 
       {messages.length !== 0 &&
         messages.map((message: Message) => {
-          console.log('messageId:', message.id)
-
           return <Message key={message.id} message={message} />
         })}
     </div>

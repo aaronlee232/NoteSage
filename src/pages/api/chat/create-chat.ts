@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { error, data: chat } = await supabase
     .from('chat')
-    .insert({ name: '_' })
+    .insert({})
     .select()
     .limit(1)
     .maybeSingle()

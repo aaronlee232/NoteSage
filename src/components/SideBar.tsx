@@ -5,6 +5,7 @@ import axios from 'axios'
 import ChatRow from './chat/ChatRow'
 import ModelSelection from './chat/ModelSelection'
 import TagSelection from './chat/TagSelection'
+import useSWR from 'swr'
 
 type Chat = {
   id: number
@@ -14,27 +15,26 @@ type Chat = {
 
 type Props = {}
 
+const testFetchChats = async () => {
+  const { data: chats } = await axios.get('/api/chat/get-chats')
+  return chats
+}
+
 const SideBar = (props: Props) => {
-  const [chats, setChats] = useState<Chat[]>([])
-  const [refreshChat, setRefreshChat] = useState(false)
+  const {
+    data: chats,
+    mutate,
+    isLoading,
+  } = useSWR<Chat[]>('updateSidebarChatsKey', testFetchChats, {
+    fallbackData: [],
+  })
 
   const router = useRouter()
   useEffect(() => {
     if (router.asPath.includes('/chat')) {
-      const fetchChats = async () => {
-        const { data: chats } = await axios.get('/api/chat/get-chats')
-        setChats(chats)
-      }
-
-      fetchChats()
-    } else {
-      console.log('no action')
+      mutate()
     }
-
-    if (refreshChat) {
-      setRefreshChat(false)
-    }
-  }, [router.asPath, refreshChat])
+  }, [router.asPath])
 
   return (
     <div className='p-2 flex flex-col max-w-xs h-screen overflow-y-auto bg-gray-500 md:min-w-[20rem]'>
@@ -50,19 +50,14 @@ const SideBar = (props: Props) => {
             <TagSelection />
           </div>
         </div>
-        {chats.length === 0 && (
+        {isLoading && (
           <div className='animate-pulse text-center text-gray-100'>
             <p>Loading Chats...</p>
           </div>
         )}
 
         {chats?.map((chat) => (
-          <ChatRow
-            key={chat.id}
-            id={chat.id}
-            name={chat.name}
-            setRefreshChat={setRefreshChat}
-          />
+          <ChatRow key={chat.id} id={chat.id} name={chat.name} />
         ))}
       </div>
     </div>

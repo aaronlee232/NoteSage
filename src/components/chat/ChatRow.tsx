@@ -3,14 +3,14 @@ import axios, { AxiosError } from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { mutate } from 'swr'
 
 type Props = {
   id: number
   name: string
-  setRefreshChat: Dispatch<SetStateAction<boolean>>
 }
 
-const ChatRow = ({ id, name, setRefreshChat }: Props) => {
+const ChatRow = ({ id, name }: Props) => {
   const router = useRouter()
   const pathname = router.asPath
   const [active, setActive] = useState(false)
@@ -29,7 +29,7 @@ const ChatRow = ({ id, name, setRefreshChat }: Props) => {
         data: { id },
       })
 
-      setRefreshChat(true)
+      mutate('updateSidebarChatsKey')
       router.replace('/chat')
     } catch (error) {
       if (error instanceof AxiosError) {
