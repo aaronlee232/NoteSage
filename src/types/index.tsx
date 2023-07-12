@@ -1,5 +1,7 @@
+type GUID = string
+
 type Message = {
-  id?: number
+  id?: GUID
   chat_id?: number
   avatar?: string
   role: string

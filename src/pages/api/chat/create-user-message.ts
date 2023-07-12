@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   const newUserMessage = await addMessageToChatDB(userMessage)
 
-  res.status(200).json({ userMessage: newUserMessage })
+  res.status(200).json(newUserMessage)
 }
 
 export default handler

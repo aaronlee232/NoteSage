@@ -2,31 +2,29 @@ import axios from 'axios'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Message from './Message'
 import { ArrowDownCircleIcon } from '@heroicons/react/24/outline'
+import useSWR from 'swr'
 
 type Props = {
   chatId: number
-  updateMessages: boolean
-  setUpdateMessages: Dispatch<SetStateAction<boolean>>
 }
 
-const Chat = ({ chatId: id, updateMessages, setUpdateMessages }: Props) => {
-  const [messages, setMessages] = useState<Message[]>([])
+const Chat = ({ chatId: id }: Props) => {
+  // const [messages, setMessages] = useState<Message[]>([])
 
-  console.log()
-  useEffect(() => {
-    const getMessages = async () => {
-      if (id) {
-        const { data } = await axios.get(`/api/chat/get-chat-messages/${id}`)
-        setMessages(data)
+  const fetchMessages = async () => {
+    const { data } = await axios.get(`/api/chat/get-chat-messages/${id}`)
+    return data
+  }
 
-        if (updateMessages) {
-          setUpdateMessages(false)
-        }
-      }
-    }
+  const {
+    data: messages,
+    mutate,
+    isLoading,
+  } = useSWR(`messagesKey/${id}`, fetchMessages, {
+    fallbackData: [],
+  })
 
-    getMessages()
-  }, [updateMessages, id])
+  // console.log('messages:', messages)
 
   return (
     <div className='flex-1 overflow-y-auto overflow-x-hidden'>
@@ -39,11 +37,11 @@ const Chat = ({ chatId: id, updateMessages, setUpdateMessages }: Props) => {
         </>
       )}
 
-      {messages &&
-        messages.map((message) => {
-          return (
-              <Message key={message.id} message={message} />
-          )
+      {messages.length !== 0 &&
+        messages.map((message: Message) => {
+          console.log('messageId:', message.id)
+
+          return <Message key={message.id} message={message} />
         })}
     </div>
   )

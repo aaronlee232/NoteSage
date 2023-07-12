@@ -12,8 +12,10 @@ import { codeBlock, oneLine } from 'common-tags'
 import { ChatCompletionRequestMessageRoleEnum } from 'openai'
 import { addMessageToChatDB } from './create-message'
 import openai from '@/scripts/openai'
+import { v4 as uuidv4 } from 'uuid'
 
 type Data = {
+  aiMessage: Message
   usedChatHistory: Message[]
   context: string
 }
@@ -110,6 +112,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   // Update chat history in DB to include latest AI/User message
   const aiMessage: Message = {
+    id: uuidv4(),
     role: 'assistant',
     chat_id: chatId,
     avatar:
@@ -124,6 +127,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   // Used for debugging
   res.status(200).json({
+    aiMessage,
     usedChatHistory: relevantChatHistory,
     context,
   })

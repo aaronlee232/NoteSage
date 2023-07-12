@@ -44,12 +44,9 @@ const TagSelection = (props: Props) => {
             }
           },
         }}
-        onChange={
-          // (newTags) => console.log(`e`, newTags)
-          (newTags) => {
-            setTags(newTags.map((tag) => tag.value))
-          }
-        }
+        onChange={(newTags) => {
+          setTags(newTags.map((tag) => tag.value))
+        }}
       />
     </div>
   )

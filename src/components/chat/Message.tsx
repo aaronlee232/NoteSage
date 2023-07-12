@@ -6,9 +6,7 @@ type Props = {
 }
 
 const Message = ({ message }: Props) => {
-  console.log('message.content:', message.content)
   const markdownText = `${message.content}`
-  console.log('markdown text', markdownText)
   const isAi = message.role == 'assistant' && false // TODO: revist
 
   return (
@@ -19,8 +17,6 @@ const Message = ({ message }: Props) => {
         <ReactMarkdown className='prose pt-1 text-md marker:text-gray-500'>
           {markdownText}
         </ReactMarkdown>
-
-        {/* <p className='pt-1 text-md'>{message.content}</p> */}
       </div>
     </div>
   )

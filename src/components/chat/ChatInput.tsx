@@ -1,16 +1,16 @@
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid'
 import axios from 'axios'
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import ModelSelection from './ModelSelection'
 import useSWR from 'swr'
+import { v4 as uuidv4 } from 'uuid'
 
 type Props = {
   chatId: number
-  setUpdateMessages: Dispatch<SetStateAction<boolean>>
 }
 
-const ChatInput = ({ chatId: id, setUpdateMessages }: Props) => {
+const ChatInput = ({ chatId: id }: Props) => {
   const [query, setQuery] = useState<string>('')
 
   const { data: model } = useSWR('modelKey', {
@@ -21,8 +21,12 @@ const ChatInput = ({ chatId: id, setUpdateMessages }: Props) => {
     fallbackData: ['all'],
   })
 
-  // TODO: useSWR to get model
-  // const model = 'gpt-3.5-turbo'
+  const { data: messages, mutate: messagesMutate } = useSWR(
+    `messagesKey/${id}`,
+    {
+      fallbackData: [],
+    }
+  )
 
   const sendMesssage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -34,26 +38,42 @@ const ChatInput = ({ chatId: id, setUpdateMessages }: Props) => {
     const notification = toast.loading('NoteSage AI is thinking...')
 
     try {
-      // Create user message first for better UX
-      const { data } = await axios.post('/api/chat/create-user-message', {
-        chatId: id,
-        query: userQuery,
-        name: 'Aaron Lee', //TODO: change from hardcoded
-      })
+      //TODO: change from hardcoded
+      const name = 'Aaron Lee'
+      const formattedName = (name as string).replaceAll(' ', '+')
 
-      setUpdateMessages(true)
+      let userMessage: Message = {
+        id: uuidv4(),
+        role: 'user',
+        chat_id: id,
+        avatar: `https://ui-avatars.com/api/?name=${formattedName}&background=3bb7b7&color=393735`,
+        content: query,
+      }
 
-      await axios.post('/api/chat', {
-        chatId: id,
-        query: userQuery,
-        model,
-        name: 'Aaron Lee', //TODO: change from hardcoded
-        tags,
-        userMessageId: data.userMessage.id,
-      })
+      const messagesWithUserMessages: Message[] = await messagesMutate(
+        createUserMessage(id, userQuery, name, messages),
+        {
+          optimisticData: [...messages, userMessage],
+          rollbackOnError: true,
+          revalidate: false,
+        }
+      )
+      const latestUserMessage = messagesWithUserMessages.at(-1)!
+
+      await messagesMutate(
+        createAiMessage(
+          id,
+          userQuery,
+          model,
+          name,
+          tags,
+          messages,
+          latestUserMessage
+        ),
+        { revalidate: false }
+      )
 
       toast.success('NoteSage AI responded!', { id: notification })
-      setUpdateMessages(true)
     } catch (error) {
       let message = 'Unknown Error'
       message = (error as Error).message
@@ -93,6 +113,47 @@ const ChatInput = ({ chatId: id, setUpdateMessages }: Props) => {
       </div>
     </div>
   )
+}
+
+const createUserMessage = async (
+  chatId: number,
+  query: string,
+  name: string,
+  messages: Message[]
+) => {
+  const { data: userMessage } = await axios.post(
+    '/api/chat/create-user-message',
+    {
+      chatId,
+      query,
+      name,
+    }
+  )
+
+  return [...messages, userMessage]
+}
+
+const createAiMessage = async (
+  chatId: number,
+  query: string,
+  model: string,
+  name: string,
+  tags: string[],
+  messages: Message[],
+  latestUserMessage: Message
+) => {
+  const { data: aiResponse } = await axios.post('/api/chat', {
+    chatId,
+    query,
+    model,
+    name,
+    tags,
+    userMessageId: latestUserMessage.id,
+  })
+
+  const aiMessage = aiResponse.aiMessage
+
+  return [...messages, latestUserMessage, aiMessage]
 }
 
 export default ChatInput
