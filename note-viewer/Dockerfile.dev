@@ -1,0 +1,18 @@
+FROM node:lts-bullseye
+
+RUN npm install -g pnpm
+
+# Set node environment to development
+ENV NODE_ENV development
+
+# Set working directory of container to be /user/src/app
+WORKDIR /usr/src/app
+
+# Copy over package.json and package-lock.json
+COPY package*.json /usr/src/app
+
+# Install dependencies
+RUN pnpm i
+
+# Start node server
+CMD ["pnpm", "dev"]

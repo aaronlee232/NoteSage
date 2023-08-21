@@ -1,0 +1,25 @@
+FROM node:lts-bullseye
+
+# Patch vulnerabilities and install production process invoker
+RUN apt-get update && apt-get install -y --no-install-recommends dumb-init
+
+# Set node environment to production
+ENV NODE_ENV production
+
+# Set working directory of container to be /user/src/app
+WORKDIR /usr/src/app
+
+# Copy over package.json and package-lock.json
+COPY package*.json /usr/src/app
+
+# Install dependencies
+RUN npm ci --only=production
+
+#Copies current directory to /user/src/app and sets ownership of directory to user 'node'
+COPY . /usr/src/app
+
+# Switch to user 'node' instead of using root user
+# USER node
+
+# Start node server
+CMD ["dumb-init", "node", "dist/app.js"]
